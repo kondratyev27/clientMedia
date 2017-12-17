@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 
 
 	auto rtsp_args = std::make_shared<MCU::Tm_RTSP_Client::Tm_Args>();
-	rtsp_args->m_URL = "rtsp://127.0.0.1:5554/12";
+    rtsp_args->m_URL = "rtsp://192.168.102.50:5554/countdown.h264";
 	 rc = MCU::Tm_Container::CreateTermination("rtsp", rtsp_args);
 	if (!rc)
 	{
