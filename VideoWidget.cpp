@@ -22,7 +22,7 @@ void VideoWidget::paintEvent(QPaintEvent *event)
         return;
     }
 
-    auto scaledImage = drawingImage.scaled(size(), Qt::KeepAspectRatio);
+    auto &&scaledImage = drawingImage.scaled(size(), Qt::KeepAspectRatio);
     QRect imageRect(QPoint(0, 0), scaledImage.size());
     imageRect.moveCenter(rect().center());
     p.drawImage(imageRect.x(), imageRect.y(), scaledImage);
