@@ -9,32 +9,27 @@
 VideoWidget::VideoWidget(QWidget *parent)
     : QWidget(parent)
 {
+    connect(this, &VideoWidget::pushImage,
+            this, &VideoWidget::onPushImage, Qt::QueuedConnection);
 }
 
 
 void VideoWidget::paintEvent(QPaintEvent *event)
 {
-    QMutexLocker mlocker(&mutex);
     QPainter p(this);
     if (drawingImage.isNull())
     {
         return;
     }
 
-    QImage image(drawingImage.bits(), drawingImage.width(), drawingImage.height(), drawingImage.format());
-    bits = image.bits();
-    p.drawImage(0, 0, image.copy());
+    auto scaledImage = drawingImage.scaled(size(), Qt::KeepAspectRatio);
+    QRect imageRect(QPoint(0, 0), scaledImage.size());
+    imageRect.moveCenter(rect().center());
+    p.drawImage(imageRect.x(), imageRect.y(), scaledImage);
 }
 
-void VideoWidget::emitPushImage(const QImage &image)
+void VideoWidget::onPushImage(const QImage &image)
 {
-    mutex.lock();
     drawingImage = image;
-    mutex.unlock();
-    repaint();
-}
-
-uchar *VideoWidget::getBits() const
-{
-    return bits;
+    update();
 }

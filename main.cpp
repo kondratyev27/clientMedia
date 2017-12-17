@@ -12,6 +12,7 @@
 #include <MCU/Core/ProxyTermination.hpp>
 #include <VideoTermiantion.h>
 #include <ATE/Debug/Trace.h>
+#include <Singleton.h>
 
 using namespace MCU;
 int main(int argc, char *argv[])
@@ -19,6 +20,7 @@ int main(int argc, char *argv[])
 	Tm_Trace trace("trace.conf");
 
     QApplication a(argc, argv);
+    Singleton::instance();
     MainWindow w;
     w.show();
 

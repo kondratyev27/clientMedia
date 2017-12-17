@@ -13,16 +13,14 @@ public:
     explicit VideoWidget(QWidget *parent = nullptr);
 
     void paintEvent(QPaintEvent *event) override;
+signals:
+    void pushImage(const QImage &image);
 
-    void emitPushImage(const QImage &image);
-
-    uchar *getBits() const;
+private slots:
+    void onPushImage(const QImage &image);
 
 private:
-
-    QMutex mutex;
     QImage drawingImage;
-    uchar *bits;
 
 };
 

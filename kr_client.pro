@@ -33,12 +33,14 @@ SOURCES += \
         main.cpp \
         MainWindow.cpp \
     VideoTermiantion.cpp \
-    VideoWidget.cpp
+    VideoWidget.cpp \
+    Singleton.cpp
 
 HEADERS += \
         MainWindow.h \
     VideoTermiantion.h \
-    VideoWidget.h
+    VideoWidget.h \
+    Singleton.h
 
 target.path = /bin
 INSTALLS += target

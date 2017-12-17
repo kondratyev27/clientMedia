@@ -26,7 +26,6 @@ public:
     int ProcessImpl() override;
 
 private:
-    VideoWidget widget;
 };
 
 #endif // VIDEOTERMIANTION_H

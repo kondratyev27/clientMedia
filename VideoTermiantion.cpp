@@ -2,6 +2,8 @@
 
 #include <MCU/Core/Packets/RAW.hpp>
 
+#include <Singleton.h>
+
 #include <QThread>
 
 #include <QDebug>
@@ -121,14 +123,6 @@ MCU::Tm_TerminationActionResult VideoTermiantion::HandleCreate(MCU::Tm_Terminati
 
 void VideoTermiantion::HandleTopologyChange(int channelIndex, bool isConnected)
 {
-    if (isConnected)
-    {
-        widget.show();
-    }
-    else
-    {
-        widget.hide();
-    }
 }
 
 int VideoTermiantion::ProcessImpl()
@@ -147,16 +141,10 @@ int VideoTermiantion::ProcessImpl()
 
     auto pRawPacket = std::static_pointer_cast<MCU::Tm_RAW_Packet>(pPacket);
 
-    QSize size(pRawPacket->m_Resolution.m_Width, pRawPacket->m_Resolution.m_Height);
-    if (widget.size() != size)
-    {
-        widget.setFixedSize(size);
-    }
-
     auto rgb = Make_RGBA_Packet(pRawPacket->m_Resolution);
 	yuv420p_to_rgb24(pRawPacket->m_Data,rgb->m_Data, pRawPacket->m_Resolution.m_Width, pRawPacket->m_Resolution.m_Height);
     QImage image(rgb->m_Data, pRawPacket->m_Resolution.m_Width, pRawPacket->m_Resolution.m_Height, QImage::Format_RGB888);
-    widget.emitPushImage(image);
+    Singleton::appendImage(image);
     return 20;
 }
 
