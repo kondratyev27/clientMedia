@@ -2,6 +2,8 @@
 
 #include <MCU/Core/Packets/RAW.hpp>
 
+#include <QThread>
+
 #include <QDebug>
 
 static long int crv_tab[256];
@@ -143,17 +145,24 @@ int VideoTermiantion::ProcessImpl()
 
     auto pPacket = m_Channels[0]->m_Queue.Dequeue();
 
-
     auto pRawPacket = std::static_pointer_cast<MCU::Tm_RAW_Packet>(pPacket);
 
+    QSize size(pRawPacket->m_Resolution.m_Width, pRawPacket->m_Resolution.m_Height);
+    if (widget.size() != size)
+    {
+        widget.setFixedSize(size);
+    }
 
-
-	auto rgb = Make_RGBA_Packet(pRawPacket->m_Resolution);
-qDebug()<<"emit";
+    auto rgb = Make_RGBA_Packet(pRawPacket->m_Resolution);
 	yuv420p_to_rgb24(pRawPacket->m_Data,rgb->m_Data, pRawPacket->m_Resolution.m_Width, pRawPacket->m_Resolution.m_Height);
-	QImage image(rgb->m_Data, pRawPacket->m_Resolution.m_Width, pRawPacket->m_Resolution.m_Height, QImage::Format_RGB32);
+    QImage image(rgb->m_Data, pRawPacket->m_Resolution.m_Width, pRawPacket->m_Resolution.m_Height, QImage::Format_RGB888);
     widget.emitPushImage(image);
     return 20;
+}
+
+QDebug &operator<<(QDebug &stream, const MCU::Tm_Size &size)
+{
+    return stream << "Size( " << size.m_Width << ", " << size.m_Height << ")";
 }
 
 VideoTermiantion::Args::Args()

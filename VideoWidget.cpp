@@ -2,35 +2,39 @@
 
 #include <QPainter>
 
+#include <QMutexLocker>
+
 #include <QDebug>
+#include <QThread>
 VideoWidget::VideoWidget(QWidget *parent)
     : QWidget(parent)
 {
-    connect(this, &VideoWidget::pushImage,
-            this, &VideoWidget::onPushImage,
-			Qt:: DirectConnection/* QueuedConnection*/);
 }
 
-
-void VideoWidget::onPushImage(const QImage &image)
-{
-    drawingImage = image;
-	qDebug()<<"try draw";
-    repaint();
-}
 
 void VideoWidget::paintEvent(QPaintEvent *event)
 {
+    QMutexLocker mlocker(&mutex);
     QPainter p(this);
     if (drawingImage.isNull())
     {
         return;
     }
 
-    p.drawImage(0, drawingImage.height(), drawingImage);
+    QImage image(drawingImage.bits(), drawingImage.width(), drawingImage.height(), drawingImage.format());
+    bits = image.bits();
+    p.drawImage(0, 0, image.copy());
 }
 
 void VideoWidget::emitPushImage(const QImage &image)
 {
-    emit pushImage(image);
+    mutex.lock();
+    drawingImage = image;
+    mutex.unlock();
+    repaint();
+}
+
+uchar *VideoWidget::getBits() const
+{
+    return bits;
 }

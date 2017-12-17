@@ -3,7 +3,11 @@
 
 
 #include <MCU/Core/Termination.hpp>
+#include <MCU/Core/Packets/RAW.hpp>
+#include <QDebug>
 #include <VideoWidget.h>
+
+QDebug &operator<<(QDebug &stream, const MCU::Tm_Size &size);
 
 class VideoTermiantion : public MCU::Tm_Termination
 {

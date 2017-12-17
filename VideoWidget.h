@@ -4,6 +4,8 @@
 #include <QWidget>
 #include <QImage>
 
+#include <QMutex>
+
 class VideoWidget : public QWidget
 {
     Q_OBJECT
@@ -14,17 +16,13 @@ public:
 
     void emitPushImage(const QImage &image);
 
-signals:
-    void pushImage(const QImage &image);
-
-public slots:
-
-private slots:
-    void onPushImage(const QImage &image);
+    uchar *getBits() const;
 
 private:
 
+    QMutex mutex;
     QImage drawingImage;
+    uchar *bits;
 
 };
 
