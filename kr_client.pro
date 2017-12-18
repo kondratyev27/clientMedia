@@ -24,7 +24,9 @@ DEFINES += QT_DEPRECATED_WARNINGS _LINUX _NPTL
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-LIBS +=  -lMCU -lSDP4_3 -lCommon -lBaseLogic -lva -lyami -lva-drm -lcrypto -lavcodec -lavformat -lavutil -lX11 -lvdpau -ldl -lavdevice -lswscale -lswresample -lm -lz -lx264
+LIBS +=  -lMCU -lSDP4_3 -lCommon -lBaseLogic -lcrypto -lavcodec -lavformat -lavutil -lX11 -lvdpau -ldl -lavdevice -lswscale -lswresample -lm -lz -lx264
+
+#LIBS +=  -lMCU -lSDP4_3 -lCommon -lBaseLogic -lva -lyami -lva-drm -lcrypto -lavcodec -lavformat -lavutil -lX11 -lvdpau -ldl -lavdevice -lswscale -lswresample -lm -lz -lx264
 
 INCLUDEPATH += $$(LIBS_INCLUDES)/libMCU/install/include
 
