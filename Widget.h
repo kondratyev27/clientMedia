@@ -5,6 +5,8 @@
 
 #include <QTcpSocket>
 
+#include <QModelIndex>
+
 class QListWidget;
 
 class Widget : public QWidget
@@ -21,9 +23,9 @@ private slots:
     void onStartClicked();
     void onStopClicked();
 
+
 private:
     void createSocket();
-
 
     QListWidget *pListWidget;
     QTcpSocket socket;

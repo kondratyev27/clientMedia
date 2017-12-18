@@ -10,6 +10,7 @@
 VideoWidget::VideoWidget(QWidget *parent)
     : QWidget(parent)
 {
+    setWindowTitle("Контент");
     connect(this, &VideoWidget::pushImage,
             this, &VideoWidget::onPushImage, Qt::QueuedConnection);
 }

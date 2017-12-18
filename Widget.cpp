@@ -7,6 +7,7 @@
 #include <QPushButton>
 
 #include <Singleton.h>
+#include <QLabel>
 
 #include <QDebug>
 
@@ -14,6 +15,7 @@ Widget::Widget(QWidget *parent)
     : QWidget(parent),
       pListWidget(new QListWidget())
 {
+    setWindowTitle("Главное окно");
     auto startButton = new QPushButton("Старт");
     connect(startButton, &QPushButton::clicked,
             this, &Widget::onStartClicked);
@@ -28,8 +30,9 @@ Widget::Widget(QWidget *parent)
     buttonsLay->addWidget(stopButton);
 
     QVBoxLayout *mainLay = new QVBoxLayout(this);
-    mainLay->addLayout(buttonsLay);
+    mainLay->addWidget(new QLabel("Доступные файлы:"));
     mainLay->addWidget(pListWidget);
+    mainLay->addLayout(buttonsLay);
 
     createSocket();
 }
