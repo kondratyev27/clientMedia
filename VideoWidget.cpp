@@ -18,17 +18,12 @@ VideoWidget::VideoWidget(QWidget *parent)
 void VideoWidget::paintEvent(QPaintEvent *event)
 {
     QPainter p(this);
-    if (originalImage.isNull())
+    if (scaledImage.isNull())
     {
         return;
     }
 
     p.drawImage(drawingPoint, scaledImage);
-}
-
-void VideoWidget::resizeEvent(QResizeEvent *pEvent)
-{
-    updateScaledImage();
 }
 
 void VideoWidget::clear()
