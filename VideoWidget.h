@@ -13,6 +13,10 @@ public:
     explicit VideoWidget(QWidget *parent = nullptr);
 
     void paintEvent(QPaintEvent *event) override;
+    void resizeEvent(QResizeEvent *pEvent) override;
+
+    void closeEvent(QCloseEvent *event) override;
+    void clear();
 signals:
     void pushImage(const QImage &image);
 
@@ -20,7 +24,11 @@ private slots:
     void onPushImage(const QImage &image);
 
 private:
-    QImage drawingImage;
+    void updateScaledImage();
+
+    QImage originalImage;
+    QImage scaledImage;
+    QPoint drawingPoint;
 
 };
 

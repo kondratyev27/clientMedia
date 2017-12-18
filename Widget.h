@@ -1,15 +1,32 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef WIDGET_H
+#define WIDGET_H
 
 #include <QMainWindow>
 
-class MainWindow : public QMainWindow
+#include <QTcpSocket>
+
+class QListWidget;
+
+class Widget : public QWidget
 {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    Widget(QWidget *parent = 0);
+    ~Widget();
+
+private slots:
+    void onReadyRead();
+
+    void onStartClicked();
+    void onStopClicked();
+
+private:
+    void createSocket();
+
+
+    QListWidget *pListWidget;
+    QTcpSocket socket;
 };
 
-#endif // MAINWINDOW_H
+#endif // WIDGET_H

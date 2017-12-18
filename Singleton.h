@@ -4,6 +4,7 @@
 #include <QObject>
 
 #include <VideoWidget.h>
+#include <MCU/Core/Container.hpp>
 
 class Singleton : public QObject
 {
@@ -14,6 +15,9 @@ public:
 
     static void appendImage(const QImage &image);
 
+    static void start(QString &fileName, const QString &username = QString(), const QString &password = QString());
+    static void stop();
+
 signals:
 
 public slots:
@@ -22,6 +26,7 @@ private:
 
     explicit Singleton(QObject *parent = nullptr);
 
+    bool isStarted = false;
     VideoWidget *pVideoWidget;
 };
 

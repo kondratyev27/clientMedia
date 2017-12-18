@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -31,16 +31,16 @@ INCLUDEPATH += $$(LIBS_INCLUDES)/libMCU/install/include
 
 SOURCES += \
         main.cpp \
-        MainWindow.cpp \
     VideoTermiantion.cpp \
     VideoWidget.cpp \
-    Singleton.cpp
+    Singleton.cpp \
+    Widget.cpp
 
 HEADERS += \
-        MainWindow.h \
     VideoTermiantion.h \
     VideoWidget.h \
-    Singleton.h
+    Singleton.h \
+    Widget.h
 
 target.path = /bin
 INSTALLS += target

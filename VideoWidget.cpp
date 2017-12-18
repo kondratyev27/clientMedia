@@ -2,7 +2,8 @@
 
 #include <QPainter>
 
-#include <QMutexLocker>
+#include <QCloseEvent>
+#include <Singleton.h>
 
 #include <QDebug>
 #include <QThread>
@@ -17,19 +18,49 @@ VideoWidget::VideoWidget(QWidget *parent)
 void VideoWidget::paintEvent(QPaintEvent *event)
 {
     QPainter p(this);
-    if (drawingImage.isNull())
+    if (originalImage.isNull())
     {
         return;
     }
 
-    auto &&scaledImage = drawingImage.scaled(size(), Qt::KeepAspectRatio);
-    QRect imageRect(QPoint(0, 0), scaledImage.size());
-    imageRect.moveCenter(rect().center());
-    p.drawImage(imageRect.x(), imageRect.y(), scaledImage);
+    p.drawImage(drawingPoint, scaledImage);
+}
+
+void VideoWidget::resizeEvent(QResizeEvent *pEvent)
+{
+    updateScaledImage();
+}
+
+void VideoWidget::clear()
+{
+   originalImage = QImage();
+   updateScaledImage();
+}
+
+void VideoWidget::closeEvent(QCloseEvent *event)
+{
+    event->ignore();
+    hide();
+    Singleton::stop();
 }
 
 void VideoWidget::onPushImage(const QImage &image)
 {
-    drawingImage = image;
+    originalImage = image;
+    updateScaledImage();
     update();
+}
+
+void VideoWidget::updateScaledImage()
+{
+    if (originalImage.isNull())
+    {
+        scaledImage = QImage();
+        return;
+    }
+
+    scaledImage = originalImage.scaled(size(), Qt::KeepAspectRatio, Qt::FastTransformation);
+    QRect imageRect(QPoint(0, 0), scaledImage.size());
+    imageRect.moveCenter(rect().center());
+    drawingPoint = imageRect.topLeft();
 }
