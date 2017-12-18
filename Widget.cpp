@@ -106,6 +106,7 @@ void Widget::resetCurrentItem()
 void Widget::onSettingsClicked()
 {
     SettingsDialog dlg(this);
+    dlg.setFixedSize(dlg.sizeHint());
     dlg.setParams(serverParams);
     if (dlg.exec() == QDialog::Accepted)
     {

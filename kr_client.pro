@@ -35,7 +35,8 @@ SOURCES += \
     VideoWidget.cpp \
     Singleton.cpp \
     Widget.cpp \
-    SettingsDialog.cpp
+    SettingsDialog.cpp \
+    AuthorizationDialog.cpp
 
 HEADERS += \
     VideoTermiantion.h \
@@ -43,10 +44,12 @@ HEADERS += \
     Singleton.h \
     Widget.h \
     SettingsDialog.h \
-    ServerParams.h
+    ServerParams.h \
+    AuthorizationDialog.h
 
 target.path = /bin
 INSTALLS += target
 
 FORMS += \
-    SettingsDialog.ui
+    SettingsDialog.ui \
+    AuthorizationDialog.ui
