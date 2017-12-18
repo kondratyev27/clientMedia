@@ -121,7 +121,10 @@ void Widget::onSettingsClicked()
     if (dlg.exec() == QDialog::Accepted)
     {
         auto &&params = dlg.getParams();
+        serverParams = params;
         saveParams(params);
+        onStopClicked();
+        pListWidget->clear();
         requestData(params);
     }
 }
