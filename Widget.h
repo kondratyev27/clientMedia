@@ -5,7 +5,7 @@
 
 #include <QTcpSocket>
 
-#include <QModelIndex>
+#include <QListWidgetItem>
 
 class QListWidget;
 
@@ -23,9 +23,12 @@ private slots:
     void onStartClicked();
     void onStopClicked();
 
+    void resetCurrentItem();
 
 private:
     void createSocket();
+
+    QListWidgetItem *pCurrentItem = nullptr;
 
     QListWidget *pListWidget;
     QTcpSocket socket;

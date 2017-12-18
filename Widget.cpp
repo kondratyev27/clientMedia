@@ -24,6 +24,8 @@ Widget::Widget(QWidget *parent)
     connect(stopButton, &QPushButton::clicked,
             this, &Widget::onStopClicked);
 
+    connect(pListWidget, &QListWidget::doubleClicked, this, &Widget::onStartClicked);
+
     QHBoxLayout *buttonsLay = new QHBoxLayout();
     buttonsLay->addStretch();
     buttonsLay->addWidget(startButton);
@@ -52,16 +54,36 @@ void Widget::onReadyRead()
 
 void Widget::onStartClicked()
 {
-    auto selectedItem = pListWidget->currentIndex();
-    auto fileName = selectedItem.data(Qt::DisplayRole).toString();
+    resetCurrentItem();
+    pCurrentItem = pListWidget->currentItem();
+    if (pCurrentItem == nullptr)
+    {
+        return;
+    }
+    pCurrentItem->setData(Qt::BackgroundRole, QBrush(QColor(193, 222, 232)));
+    auto fileName = pCurrentItem->data(Qt::DisplayRole).toString();
     Singleton::start(fileName);
+
+    pListWidget->selectionModel()->setCurrentIndex(QModelIndex(), QItemSelectionModel::Clear);
 }
 
 void Widget::onStopClicked()
 {
+    resetCurrentItem();
     qDebug()<<"11111111111";
     Singleton::stop();
     qDebug()<<"2222222222222";
+}
+
+void Widget::resetCurrentItem()
+{
+    if (pCurrentItem == nullptr)
+    {
+        return;
+    }
+
+    pCurrentItem->setData(Qt::BackgroundRole, QBrush(Qt::white));
+    pCurrentItem = nullptr;
 }
 
 void Widget::createSocket()
