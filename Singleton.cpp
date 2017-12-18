@@ -60,7 +60,7 @@ void Singleton::start(QString &fileName)
     }
 
 
-    self.pVideoWidget->show();
+    self.timer.start();
     self.isStarted = true;
 }
 
@@ -68,6 +68,7 @@ void Singleton::stop()
 {
     qDebug()<<Q_FUNC_INFO;
     auto &self = instance();
+    self.timer.stop();
     MCU::Tm_Topology topology;
     if (!MCU::Tm_Container::ModifyTopology("default", topology, true))
     {
@@ -78,6 +79,15 @@ void Singleton::stop()
     self.pVideoWidget->hide();
     self.pVideoWidget->clear();
     self.isStarted = false;
+}
+
+void Singleton::onTimerTimeout()
+{
+    if (pVideoWidget->isEmpthy())
+    {
+        emit streamingError();
+        stop();
+    }
 }
 
 Singleton::Singleton(QObject *parent)
@@ -111,4 +121,7 @@ Singleton::Singleton(QObject *parent)
         qDebug() << errorStr;
     }
 
+    connect(&timer, &QTimer::timeout, this, &Singleton::onTimerTimeout);
+    timer.setInterval(1000);
+    timer.setSingleShot(true);
 }

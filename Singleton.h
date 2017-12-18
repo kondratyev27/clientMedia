@@ -6,6 +6,8 @@
 #include <VideoWidget.h>
 #include <MCU/Core/Container.hpp>
 
+#include <QTimer>
+
 
 
 class Singleton : public QObject
@@ -22,8 +24,12 @@ public:
     static void stop();
 
 signals:
+    void streamingError();
 
 public slots:
+
+private slots:
+    void onTimerTimeout();
 
 private:
 
@@ -31,6 +37,7 @@ private:
 
     bool isStarted = false;
     VideoWidget *pVideoWidget;
+    QTimer timer;
 
     QString userName = "loh";
     QString password = "loh";

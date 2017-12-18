@@ -27,6 +27,11 @@ void VideoWidget::paintEvent(QPaintEvent *event)
     p.drawImage(drawingPoint, scaledImage);
 }
 
+bool VideoWidget::isEmpthy()
+{
+    return scaledImage.isNull();
+}
+
 void VideoWidget::clear()
 {
    originalImage = QImage();
@@ -42,6 +47,7 @@ void VideoWidget::closeEvent(QCloseEvent *event)
 
 void VideoWidget::onPushImage(const QImage &image)
 {
+    show();
     originalImage = image;
     updateScaledImage();
     update();

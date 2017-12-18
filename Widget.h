@@ -28,6 +28,8 @@ private slots:
     void onStopClicked();
     void onSettingsClicked();
 
+    void onStreamingError();
+
 private:
     ServerParams readParams();
     void saveParams(const ServerParams &params);

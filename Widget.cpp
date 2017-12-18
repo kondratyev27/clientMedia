@@ -6,6 +6,8 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QSettings>
+#include <QMessageBox>
+#include <AuthorizationDialog.h>
 
 #include <Singleton.h>
 #include <QLabel>
@@ -47,6 +49,8 @@ Widget::Widget(QWidget *parent)
 
     createSocket();
     requestData(serverParams);
+
+    connect(&Singleton::instance(), &Singleton::streamingError, this, &Widget::onStreamingError);
 }
 
 Widget::~Widget()
@@ -77,6 +81,15 @@ void Widget::onStartClicked()
     {
         return;
     }
+
+    AuthorizationDialog dlg(this);
+    dlg.setFixedSize(dlg.sizeHint());
+    if (dlg.exec() == QDialog::Rejected)
+    {
+        return;
+    }
+
+    Singleton::setUserParams(dlg.userName(), dlg.password());
     pCurrentItem->setData(Qt::BackgroundRole, QBrush(QColor(193, 222, 232)));
     auto fileName = pCurrentItem->data(Qt::DisplayRole).toString();
     Singleton::start(fileName);
@@ -114,6 +127,12 @@ void Widget::onSettingsClicked()
         saveParams(params);
         requestData(params);
     }
+}
+
+void Widget::onStreamingError()
+{
+    resetCurrentItem();
+    QMessageBox::critical(this, "Ошибка", "Ошибка авторизации!");
 }
 
 ServerParams Widget::readParams()

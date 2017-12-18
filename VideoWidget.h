@@ -13,6 +13,7 @@ public:
     explicit VideoWidget(QWidget *parent = nullptr);
 
     void paintEvent(QPaintEvent *event) override;
+    bool isEmpthy();
 
     void closeEvent(QCloseEvent *event) override;
     void clear();
