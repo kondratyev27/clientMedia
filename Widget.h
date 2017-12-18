@@ -7,6 +7,8 @@
 
 #include <QListWidgetItem>
 
+#include <ServerParams.h>
+
 class QListWidget;
 
 class Widget : public QWidget
@@ -17,21 +19,27 @@ public:
     Widget(QWidget *parent = 0);
     ~Widget();
 
+    void closeEvent(QCloseEvent *event);
+
 private slots:
     void onReadyRead();
 
     void onStartClicked();
     void onStopClicked();
-
-    void resetCurrentItem();
+    void onSettingsClicked();
 
 private:
+    ServerParams readParams();
+    void saveParams(const ServerParams &params);
     void createSocket();
+    void requestData(const ServerParams &params);
+    void resetCurrentItem();
 
     QListWidgetItem *pCurrentItem = nullptr;
 
     QListWidget *pListWidget;
     QTcpSocket socket;
+    ServerParams serverParams;
 };
 
 #endif // WIDGET_H

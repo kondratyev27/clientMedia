@@ -6,6 +6,8 @@
 #include <VideoWidget.h>
 #include <MCU/Core/Container.hpp>
 
+
+
 class Singleton : public QObject
 {
     Q_OBJECT
@@ -15,7 +17,8 @@ public:
 
     static void appendImage(const QImage &image);
 
-    static void start(QString &fileName, const QString &username = QString(), const QString &password = QString());
+    static void setUserParams(const QString &userName, const QString &password);
+    static void start(QString &fileName);
     static void stop();
 
 signals:
@@ -28,6 +31,9 @@ private:
 
     bool isStarted = false;
     VideoWidget *pVideoWidget;
+
+    QString userName = "loh";
+    QString password = "loh";
 };
 
 #endif // SINGLETON_H

@@ -34,13 +34,19 @@ SOURCES += \
     VideoTermiantion.cpp \
     VideoWidget.cpp \
     Singleton.cpp \
-    Widget.cpp
+    Widget.cpp \
+    SettingsDialog.cpp
 
 HEADERS += \
     VideoTermiantion.h \
     VideoWidget.h \
     Singleton.h \
-    Widget.h
+    Widget.h \
+    SettingsDialog.h \
+    ServerParams.h
 
 target.path = /bin
 INSTALLS += target
+
+FORMS += \
+    SettingsDialog.ui

@@ -23,7 +23,13 @@ void Singleton::appendImage(const QImage &image)
     emit instance().pVideoWidget->pushImage(image.copy());
 }
 
-void Singleton::start(QString &fileName, const QString &username, const QString &password)
+void Singleton::setUserParams(const QString &userName, const QString &password)
+{
+    instance().userName = userName;
+    instance().password = password;
+}
+
+void Singleton::start(QString &fileName)
 {
     auto &self = instance();
     if (self.isStarted)
@@ -33,6 +39,7 @@ void Singleton::start(QString &fileName, const QString &username, const QString 
 
     auto rtsp_args = std::make_shared<MCU::Tm_RTSP_Client::Tm_Args>();
     rtsp_args->m_URL = "rtsp://192.168.102.50:5554/" + fileName.toStdString();
+    rtsp_args->m_AuthInfo = MCU::Tm_AuthInfo(self.userName.toStdString(), self.password.toStdString());
     auto rc = MCU::Tm_Container::CreateTermination("rtsp", rtsp_args);
     if (!rc)
     {

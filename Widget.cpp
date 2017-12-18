@@ -5,15 +5,19 @@
 #include <QListWidget>
 #include <QHBoxLayout>
 #include <QPushButton>
+#include <QSettings>
 
 #include <Singleton.h>
 #include <QLabel>
+
+#include <SettingsDialog.h>
 
 #include <QDebug>
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent),
-      pListWidget(new QListWidget())
+      pListWidget(new QListWidget()),
+      serverParams(readParams())
 {
     setWindowTitle("Главное окно");
     auto startButton = new QPushButton("Старт");
@@ -24,9 +28,14 @@ Widget::Widget(QWidget *parent)
     connect(stopButton, &QPushButton::clicked,
             this, &Widget::onStopClicked);
 
+    auto settingsButton = new QPushButton("Настройки");
+    connect(settingsButton, &QPushButton::clicked,
+            this, &Widget::onSettingsClicked);
+
     connect(pListWidget, &QListWidget::doubleClicked, this, &Widget::onStartClicked);
 
     QHBoxLayout *buttonsLay = new QHBoxLayout();
+    buttonsLay->addWidget(settingsButton);
     buttonsLay->addStretch();
     buttonsLay->addWidget(startButton);
     buttonsLay->addWidget(stopButton);
@@ -37,14 +46,22 @@ Widget::Widget(QWidget *parent)
     mainLay->addLayout(buttonsLay);
 
     createSocket();
+    requestData(serverParams);
 }
 
 Widget::~Widget()
 {
 }
 
+void Widget::closeEvent(QCloseEvent *event)
+{
+    QApplication::quit();
+}
+
 void Widget::onReadyRead()
 {
+    resetCurrentItem();
+    pListWidget->clear();
     qDebug()<<Q_FUNC_INFO;
     auto data = socket.readAll();
     qDebug()<<"data =" << data;
@@ -86,6 +103,31 @@ void Widget::resetCurrentItem()
     pCurrentItem = nullptr;
 }
 
+void Widget::onSettingsClicked()
+{
+    SettingsDialog dlg(this);
+    dlg.setParams(serverParams);
+    if (dlg.exec() == QDialog::Accepted)
+    {
+        auto &&params = dlg.getParams();
+        saveParams(params);
+        requestData(params);
+    }
+}
+
+ServerParams Widget::readParams()
+{
+    QSettings settings;
+    return {settings.value("host").toString(), settings.value("port", 0).toUInt()};
+}
+
+void Widget::saveParams(const ServerParams &params)
+{
+    QSettings settings;
+    settings.setValue("host", params.host);
+    settings.setValue("port", params.port);
+}
+
 void Widget::createSocket()
 {
     connect(&socket, &QTcpSocket::readyRead, this, &Widget::onReadyRead);
@@ -97,5 +139,15 @@ void Widget::createSocket()
     {
         qDebug()<<"Error ="<<error;
     });
-    socket.connectToHost("192.168.102.50", 49999);
+//    socket.connectToHost("192.168.102.50", 49999);
+}
+
+void Widget::requestData(const ServerParams &params)
+{
+    if (socket.isOpen())
+    {
+        socket.disconnectFromHost();
+    }
+
+    socket.connectToHost(params.host, params.port);
 }
