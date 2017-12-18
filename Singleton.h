@@ -19,8 +19,7 @@ public:
 
     static void appendImage(const QImage &image);
 
-    static void setUserParams(const QString &userName, const QString &password);
-    static void start(QString &fileName);
+    static void start(QString &fileName, const QString &userName, const QString &password);
     static void stop();
 
 signals:
@@ -38,9 +37,6 @@ private:
     bool isStarted = false;
     VideoWidget *pVideoWidget;
     QTimer timer;
-
-    QString userName = "loh";
-    QString password = "loh";
 };
 
 #endif // SINGLETON_H

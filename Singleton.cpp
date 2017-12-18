@@ -23,23 +23,14 @@ void Singleton::appendImage(const QImage &image)
     emit instance().pVideoWidget->pushImage(image.copy());
 }
 
-void Singleton::setUserParams(const QString &userName, const QString &password)
-{
-    instance().userName = userName;
-    instance().password = password;
-}
-
-void Singleton::start(QString &fileName)
+void Singleton::start(QString &fileName, const QString &userName, const QString &password)
 {
     auto &self = instance();
-    if (self.isStarted)
-    {
-        stop();
-    }
+    stop();
 
     auto rtsp_args = std::make_shared<MCU::Tm_RTSP_Client::Tm_Args>();
     rtsp_args->m_URL = "rtsp://192.168.102.50:5554/" + fileName.toStdString();
-    rtsp_args->m_AuthInfo = MCU::Tm_AuthInfo(self.userName.toStdString(), self.password.toStdString());
+    rtsp_args->m_AuthInfo = MCU::Tm_AuthInfo(userName.toStdString(), password.toStdString());
     auto rc = MCU::Tm_Container::CreateTermination("rtsp", rtsp_args);
     if (!rc)
     {
@@ -66,9 +57,14 @@ void Singleton::start(QString &fileName)
 
 void Singleton::stop()
 {
-    qDebug()<<Q_FUNC_INFO;
     auto &self = instance();
+    if (self.isStarted == false)
+    {
+        return;
+    }
     self.timer.stop();
+    self.pVideoWidget->setVisible(false);
+    self.pVideoWidget->clear();
     MCU::Tm_Topology topology;
     if (!MCU::Tm_Container::ModifyTopology("default", topology, true))
     {
@@ -76,8 +72,6 @@ void Singleton::stop()
         qDebug()<<errorStr;
     }
     qDebug()<<"destroy =" << MCU::Tm_Container::DestroyTermination("rtsp");
-    self.pVideoWidget->hide();
-    self.pVideoWidget->clear();
     self.isStarted = false;
 }
 

@@ -75,7 +75,7 @@ void Widget::onReadyRead()
 
 void Widget::onStartClicked()
 {
-    resetCurrentItem();
+    onStopClicked();
     pCurrentItem = pListWidget->currentItem();
     if (pCurrentItem == nullptr)
     {
@@ -89,10 +89,9 @@ void Widget::onStartClicked()
         return;
     }
 
-    Singleton::setUserParams(dlg.userName(), dlg.password());
     pCurrentItem->setData(Qt::BackgroundRole, QBrush(QColor(193, 222, 232)));
     auto fileName = pCurrentItem->data(Qt::DisplayRole).toString();
-    Singleton::start(fileName);
+    Singleton::start(fileName, dlg.userName(), dlg.password());
 
     pListWidget->selectionModel()->setCurrentIndex(QModelIndex(), QItemSelectionModel::Clear);
 }
@@ -100,9 +99,7 @@ void Widget::onStartClicked()
 void Widget::onStopClicked()
 {
     resetCurrentItem();
-    qDebug()<<"11111111111";
     Singleton::stop();
-    qDebug()<<"2222222222222";
 }
 
 void Widget::resetCurrentItem()

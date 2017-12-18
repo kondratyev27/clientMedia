@@ -22,6 +22,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     Singleton::instance();
     Widget w;
+    w.move(200, 400);
     w.show();
 
 
