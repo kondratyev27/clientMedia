@@ -13,6 +13,12 @@ VideoWidget::VideoWidget(QWidget *parent)
     setWindowTitle("Контент");
     connect(this, &VideoWidget::pushImage,
             this, &VideoWidget::onPushImage, Qt::QueuedConnection);
+
+
+    timer.setInterval(1000);
+    timer.setSingleShot(true);
+    connect(&timer, &QTimer::timeout, this,
+            &VideoWidget::dataStreamingFinished);
 }
 
 
@@ -51,6 +57,7 @@ void VideoWidget::onPushImage(const QImage &image)
     originalImage = image;
     updateScaledImage();
     update();
+    timer.start();
 }
 
 void VideoWidget::updateScaledImage()

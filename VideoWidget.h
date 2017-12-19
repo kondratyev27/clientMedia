@@ -4,7 +4,7 @@
 #include <QWidget>
 #include <QImage>
 
-#include <QMutex>
+#include <QTimer>
 
 class VideoWidget : public QWidget
 {
@@ -20,6 +20,8 @@ public:
 signals:
     void pushImage(const QImage &image);
 
+    void dataStreamingFinished();
+
 private slots:
     void onPushImage(const QImage &image);
 
@@ -29,6 +31,7 @@ private:
     QImage originalImage;
     QImage scaledImage;
     QPoint drawingPoint;
+    QTimer timer;
 
 };
 

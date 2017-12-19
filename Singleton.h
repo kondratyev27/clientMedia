@@ -29,6 +29,7 @@ public slots:
 
 private slots:
     void onTimerTimeout();
+    void onStreamingFinished();
 
 private:
 

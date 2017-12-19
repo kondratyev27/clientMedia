@@ -1,6 +1,7 @@
 #include "Singleton.h"
 
 #include <QDebug>
+#include <QMessageBox>
 
 #include <MCU/Terminations/RTSP/Client.hpp>
 //#include <MCU/Terminations/RTSP/Client.hpp>
@@ -84,6 +85,15 @@ void Singleton::onTimerTimeout()
     }
 }
 
+void Singleton::onStreamingFinished()
+{
+    if (isStarted)
+    {
+        QMessageBox::critical(nullptr, "Ошбика!", "Разрвано соеднинеие с rtsp сервером");
+        stop();
+    }
+}
+
 Singleton::Singleton(QObject *parent)
     : QObject(parent),
       pVideoWidget(new VideoWidget)
@@ -118,4 +128,7 @@ Singleton::Singleton(QObject *parent)
     connect(&timer, &QTimer::timeout, this, &Singleton::onTimerTimeout);
     timer.setInterval(1000);
     timer.setSingleShot(true);
+
+    connect(pVideoWidget, &VideoWidget::dataStreamingFinished,
+            this, &Singleton::onStreamingFinished);
 }
